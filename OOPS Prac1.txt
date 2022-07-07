@@ -1,0 +1,366 @@
+PRACTICAL NO. 1
+
+Problem Statement 1 :-
+
+Write a program to demonstrate method overloading.
+Write a program to design an OnlineShoppingPortal. Customers are of two categories, Prime and Regular. “Prime” requires only amount to be paid for checkout and “Regular” customer has to provide amount and promocode. A prime customer gets 30% off if cart value > 1000, else 20% off. A regular customer gets only Rs.10 off if cart value < 500, else 10% off (provided that the code matches “GET10”).
+Demonstrate function overloading on a function checkout() which will display the original and discounted amount. Create object in main() to demonstrate function overloading.
+
+Code:
+
+Customer.java
+
+class Customer {
+    String category;
+    ShoppingCart sc;
+
+    Customer() {
+    }
+
+    Customer(String category, ShoppingCart sc) {
+        this.category = category;
+        this.sc = sc;
+    }
+
+    String getCategory() {
+        return this.category;
+    }
+
+    ShoppingCart getSc(){
+        return this.sc;
+    }
+
+    void customer_display(){
+        System.out.println("CATEGORY : \t" + this.category);
+        this.sc.cart_display();
+    }
+}
+
+DiscountCalculator.java
+
+class DiscountCalculator {
+    float ans=5f;
+
+    static float checkout(float amount) 
+    {
+
+        float check=1000f;
+
+        if(amount>check)
+        {
+            float ans=((7*(amount))/10f);
+            return ans;
+        }
+        else
+        {
+            float ans=((8*(amount))/10f);
+            return ans;
+        }
+
+    }
+
+    static float checkout(float amount, String promocode) 
+    {
+        float check=500f;       
+
+        if(amount<check)
+        {
+            float ans=amount-10f;
+            return ans;
+        }
+        else if(promocode.equals("GET10"))
+        {
+            float ans=((9*(amount))/10);
+            return ans;
+        }
+        else
+        {
+            float ans=amount-10f;
+            return ans;
+        }
+    }
+}
+
+ShoppingCart.java
+
+class ShoppingCart {
+    String item_name;
+    float item_amount;
+    float discounted_amount;
+
+    ShoppingCart() {
+
+    }
+
+    ShoppingCart(String item_name, float item_amount, float discounted_amount) {
+        this.item_name = item_name;
+        this.item_amount = item_amount;
+        this.discounted_amount = discounted_amount;
+    }
+
+    String getItemName(){
+        return this.item_name;
+    }
+
+    float getItemAmount(){
+        return this.item_amount;
+    }
+    float getDiscountedAmount(){
+        return this.discounted_amount;
+    }
+
+    void cart_display()
+    {
+        System.out.println("ITEM NAME : \t" + this.item_name);
+        System.out.println("ITEM PRICE : \t" + this.item_amount);
+        float d=this.item_amount-this.discounted_amount;
+        System.out.println("DISCOUNT : \t" + d);
+        System.out.println("NET PRICE : \t" + this.discounted_amount);
+        System.out.println();
+    }
+
+}
+
+
+
+
+ Test.java
+
+class Test {
+    public static void main(String[] args) {
+
+        ShoppingCart s_cart1 = new ShoppingCart();
+        ShoppingCart s_cart2 = new ShoppingCart();
+        ShoppingCart s_cart3 = new ShoppingCart();
+        ShoppingCart s_cart4 = new ShoppingCart();
+        ShoppingCart s_cart5 = new ShoppingCart();
+        Customer cus_1 = new Customer("PRIME", s_cart1);
+        Customer cus_2 = new Customer("PRIME", s_cart2);
+        Customer cus_3 = new Customer("REGULAR", s_cart3);
+        Customer cus_4 = new Customer("REGULAR", s_cart4);
+        Customer cus_5 = new Customer("REGULAR", s_cart5);
+
+        ///////////////////////////// PRIME GREATER THAN 1000//////////////////////////////////////////////////////
+        
+        System.out.println();
+        System.out.println("PRIME CUSTOMER WITH GREATER THAN 1000 AMOUNT");
+
+        s_cart1.item_name = "Mobile Phone";
+        s_cart1.item_amount = 1500f;
+
+        float dis1;
+        String cus_type1 = cus_1.getCategory();
+
+        if (cus_type1.equals("REGULAR")) {
+            dis1 = DiscountCalculator.checkout(cus_1.sc.item_amount, "GET10");
+        } else {
+            dis1 = DiscountCalculator.checkout(cus_1.sc.item_amount);
+        }
+
+        s_cart1.discounted_amount = dis1;
+
+        System.out.println();
+        cus_1.customer_display();
+        System.out.println();
+
+        //////////////////////////////// PRIME LESS THAN 1000///////////////////////////////////////////////////
+
+        System.out.println("PRIME CUSTOMER WITH LESS THAN 1000 AMOUNT");
+
+        s_cart2.item_name = "Bike";
+        s_cart2.item_amount = 500f;
+
+        float dis2;
+        String cus_type2 = cus_2.getCategory();
+
+        if (cus_type2.equals("REGULAR")) {
+            dis2 = DiscountCalculator.checkout(cus_2.sc.item_amount, "GET10");
+        } else {
+            dis2 = DiscountCalculator.checkout(cus_2.sc.item_amount);
+        }
+
+        s_cart2.discounted_amount = dis2;
+
+        System.out.println();
+        cus_2.customer_display();
+        System.out.println();
+
+        ///////////////////////////// REGULAR GREATER THAN 500 CORRECT CODE//////////////////////////////////////////////////////
+
+        System.out.println("REGULAR CUSTOMER WITH GREATER THAN 500 AMOUNT & CORRECT CODE");
+
+        s_cart3.item_name = "CAR";
+        s_cart3.item_amount = 1000f;
+
+        float dis3;
+        String cus_type3 = cus_3.getCategory();
+
+        if (cus_type3.equals("REGULAR")) {
+            dis3 = DiscountCalculator.checkout(cus_3.sc.item_amount, "GET10");
+        } else {
+            dis3 = DiscountCalculator.checkout(cus_3.sc.item_amount);
+        }
+
+        s_cart3.discounted_amount = dis3;
+
+        System.out.println();
+        cus_3.customer_display();
+        System.out.println();
+
+        ///////////////////////////// REGULAR GREATER THAN 500 INCORRECT CODE//////////////////////////////////////////////////////
+
+        System.out.println("REGULAR CUSTOMER WITH GREATER THAN 500 AMOUNT & INCORRECT CODE");
+
+        s_cart4.item_name = "CAR";
+        s_cart4.item_amount = 1000f;
+
+        float dis4;
+        String cus_type4 = cus_4.getCategory();
+
+        if (cus_type4.equals("REGULAR")) {
+            dis4 = DiscountCalculator.checkout(cus_4.sc.item_amount, "GET50");
+        } else {
+            dis4 = DiscountCalculator.checkout(cus_4.sc.item_amount);
+        }
+
+        s_cart4.discounted_amount = dis4;
+
+        System.out.println();
+        cus_4.customer_display();
+        System.out.println();
+
+        ///////////////////////////// REGULAR LESS THAN  500//////////////////////////////////////////////////////
+
+        System.out.println("REGULAR CUSTOMER WITH LESS THAN 500 AMOUNT ");
+
+        s_cart5.item_name = "PEN";
+        s_cart5.item_amount = 80f;
+
+        float dis5;
+        String cus_type5 = cus_5.getCategory();
+
+        if (cus_type5.equals("REGULAR")) {
+            dis5 = DiscountCalculator.checkout(cus_5.sc.item_amount, "GET10");
+        } else {
+            dis5 = DiscountCalculator.checkout(cus_5.sc.item_amount);
+        }
+
+        s_cart5.discounted_amount = dis5;
+
+        System.out.println();
+        cus_5.customer_display();
+        System.out.println();
+
+    }
+}
+
+OUTPUT : 
+
+
+Problem Statement 2 :-
+
+Create a class complex and provide functionalities to add and multiply 2 complex numbers. Class Complex will have real and imaginary as the data
+members.  Write appropriate main() to demonstrate the functionalities. 
+
+Code:
+
+Complex.java
+
+class Complex {
+    int real;
+    int img;
+
+    Complex() {
+    }
+
+    Complex(int real, int img) {
+        this.real = real;
+        this.img = img;
+    }
+
+    void display() {
+        System.out.println("Real Part : "+this.real + "\t\tImaginary Part : " + this.img + "\n");
+    }
+
+    int getReal() {
+        return this.real;
+    }
+
+    int getImg() {
+        return this.img;
+    }
+
+    void setReal(int real) {
+        this.real = real;
+    }
+
+    void setImg(int img) {
+        this.img = img;
+    }
+
+    // The formula for adding two complex numbers is: 
+    // (a + ib) + (c + id) = (a+c) + i(b+d)
+
+    static Complex addComplex(Complex x, Complex y) {
+
+        Complex res = new Complex();
+
+        res.real = x.real + y.real;
+        res.img = x.img + y.img;
+
+        return res;
+    }
+
+    // The formula for multiplying two complex numbers is: 
+    // (a + ib) * (c + id) = (ac -bd) + i(ad + bc)
+
+    static Complex multiplyComplex(Complex x, Complex y) {
+
+        Complex res = new Complex();
+
+        int a = x.real;
+        int b = x.img;
+        int c = y.real;
+        int d = y.img;
+
+        res.real = (a * c - b * d);
+        res.img = (a * d + b * c);
+
+        return res;
+    }
+
+}
+
+Test.java
+
+public class Test {
+    public static void main(String[] args) {
+
+        Complex x = new Complex(2,3);
+        Complex y = new Complex(7,10);
+
+        System.out.println("NAME : PRATHAMESH RAJBHOJ");
+        System.out.println("ROLL : A - 53");
+        System.out.println();
+
+        x.display();
+        y.display();
+
+        Complex a = Complex.addComplex(x,y);
+        Complex b = Complex.multiplyComplex(x,y);
+
+        System.out.println("RESULT OF ADDITION :\n");
+        a.display();
+
+        System.out.println("RESULT OF MULTIPLICATION :\n");
+        b.display();
+
+        System.out.println();
+    }
+}
+
+
+
+OUTPUT :
+
+

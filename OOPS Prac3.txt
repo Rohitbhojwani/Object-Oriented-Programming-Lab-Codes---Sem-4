@@ -1,0 +1,410 @@
+OOPS PRACTICAL - 3
+
+Name : Prathamesh Rajbhoj
+Branch : CSE
+Roll No : A - 53
+
+Aim : 
+
+1. Create a class Time with the data members as hours and minutes. Add Functionality to add and subtract 2 time objects.Test the time class is main(). 
+
+2. "GreatClock" (A scientific research company)  wants advanced time objects which will also provide functionalities of addition and subtraction of seconds and milliseconds. How will you add this feature without changing the Time Class. 
+
+3. Create a class TimeZone which will add functionality to convert the time from one time zone to another time zone. Note: Class Time zone  uses the TIme Object and uses the Add and Subtract methods of Time Class.
+
+
+
+
+Question - 1
+
+Time.java :
+public class Time {
+
+    int day;
+    int hours;
+    int minutes;
+
+    Time() {
+    }
+
+    Time(int day, int hours, int minutes) {
+        this.day = day;
+        this.hours = hours;
+        this.minutes = minutes;
+    }
+
+    public void display_time() {
+        System.out.println();
+        System.out.println("Resultant Time = " + this.hours + " : " + this.minutes + " of day " + this.day);
+        System.out.println();
+    }
+
+    public static Time add_time(Time t1, Time t2) {
+        
+        int h1 = t1.hours;
+        int m1 = t1.minutes;
+        int d1 = t1.day;
+        int h2 = t2.hours;
+        int m2 = t2.minutes;
+        int d2 = t2.day;
+        int d3 = d1 + d2;
+
+        int h3 = h1 + h2;
+        int m3 = m1 + m2;
+
+        if (m3 > 59) {
+            m3 = m3 % 60;
+            h3++;
+        }
+
+        if (h3 > 23) {
+            h3 = h3 % 24;
+            d3++;
+        }
+
+        Time t = new Time();
+        t.hours = h3;
+        t.minutes = m3;
+        t.day = d3;
+
+        return t;
+
+    }
+
+    public static Time subtract_time(Time t1, Time t2) {
+        int h1 = t1.hours;
+        int m1 = t1.minutes;
+        int h2 = t2.hours;
+        int m2 = t2.minutes;
+
+        if (h1 > h2) {
+            System.out.println("invalid time");
+            return null;
+        }
+
+        if (h1 == h2 && m1 > m2) {
+            System.out.println("invalid time");
+            return null;
+        }
+
+        // 9 30
+        // 10 20
+
+        int h3 = h2 - h1;
+        int m3 = m2 - m1;
+
+        if (m3 < 0) {
+            m3 = m3 + 60;
+            h3--;
+        }
+
+        if (h3 < 0) {
+            h3 += 24;
+        }
+
+        Time t = new Time();
+        t.hours = h3;
+        t.minutes = m3;
+
+        return t;
+
+    }
+
+}
+Test.java :
+
+public class Test {
+    public static void main(String[] args) {
+
+        System.out.println();
+        System.out.println("Name : Prathamesh Rajbhoj");
+        System.out.println("Roll : A - 53");
+        System.out.println();
+        
+        Time t1 = new Time(12, 10, 50);
+        Time t2 = new Time(15, 20, 20);
+        Time t3 = Time.add_time(t1, t2);
+        Time t4 = Time.subtract_time(t1, t2);
+
+        t3.display_time();
+
+        if (t3 != null) {
+            t4.display_time();
+        }
+    }
+}
+Output :
+
+
+
+
+Question - 2
+
+GreatClock.java :
+
+public class GreatClock extends Time {
+
+    int seconds;
+    int milliseconds;
+
+    GreatClock() {
+    }
+
+    GreatClock(int day, int hours, int minutes, int seconds, int milliseconds) {
+
+        super(day, hours, minutes);
+
+        this.seconds = seconds;
+        this.milliseconds = milliseconds;
+    }
+
+    public void display_clock() {
+        System.out.println();
+        System.out.println("Resultant Clock");
+        System.out.println("Hour : " + this.hours);
+        System.out.println("Minute : " + this.minutes);
+        System.out.println("Second : " + this.seconds);
+        System.out.println("MilliSecond : " + this.milliseconds);
+        System.out.println();
+    }
+
+    public static GreatClock add_time(GreatClock gtc1, GreatClock gtc2) {
+
+        int d1 = gtc1.day;
+        int h1 = gtc1.hours;
+        int m1 = gtc1.minutes;
+        int s1 = gtc1.seconds;
+        int ms1 = gtc1.milliseconds;
+
+        int d2 = gtc2.day;
+        int h2 = gtc2.hours;
+        int m2 = gtc2.minutes;
+        int s2 = gtc2.seconds;
+        int ms2 = gtc2.milliseconds;
+
+        int d3 = d1 + d2;
+        int h3 = h1 + h2;
+        int m3 = m1 + m2;
+        int s3 = s1 + s2;
+        int ms3 = ms1 + ms2;
+
+        if (ms3 > 99) {
+            ms3 = ms3 % 100;
+            s3++;
+        }
+
+        if (s3 > 59) {
+            s3 = s3 % 60;
+            m3++;
+        }
+
+        if (m3 > 59) {
+            m3 = m3 % 60;
+            h3++;
+        }
+
+        if (h3 > 23) {
+            h3 = h3 % 24;
+            d3++;
+        }
+
+        GreatClock gtc3 = new GreatClock();
+        gtc3.hours = h3;
+        gtc3.minutes = m3;
+        gtc3.day = d3;
+        gtc3.seconds=s3;
+        gtc3.milliseconds=ms3;
+
+        return gtc3;
+
+    }
+    public static GreatClock subtract_time(GreatClock gtc1, GreatClock gtc2) {
+
+        int d1 = gtc1.day;
+        int h1 = gtc1.hours;
+        int m1 = gtc1.minutes;
+        int s1 = gtc1.seconds;
+        int ms1 = gtc1.milliseconds;
+
+        int d2 = gtc2.day;
+        int h2 = gtc2.hours;
+        int m2 = gtc2.minutes;
+        int s2 = gtc2.seconds;
+        int ms2 = gtc2.milliseconds;
+
+        if(d1>d2)
+        {
+            return null;
+        }
+
+        if (h1 > h2) {
+            System.out.println("invalid time");
+            return null;
+        }
+
+        if (h1 == h2 && m1 > m2) {
+            System.out.println("invalid time");
+            return null;
+        }
+
+        int d3 = d2 - d1;
+        int h3 = h2 - h1;
+        int m3 = m2 - m1;
+        int s3 = s2 - s1;
+        int ms3 = ms2 - ms1;
+
+        if (ms3 < 0) {
+            ms3 = ms3 + 100;
+            s3--;
+        }
+
+        if (s3 < 0) {
+            s3 = s3 + 60;
+            m3--;
+        }
+
+        if (m3 < 0) {
+            m3 = m3 + 60;
+            h3--;
+        }
+
+        if (h3 < 0) {
+            h3 = h3 + 24;
+            d3--;
+        }
+
+        GreatClock gtc3 = new GreatClock();
+        gtc3.hours = h3;
+        gtc3.minutes = m3;
+        gtc3.day = d3;
+        gtc3.seconds=s3;
+        gtc3.milliseconds=ms3;
+
+        return gtc3;
+
+    }
+}
+
+Test.java :
+
+public class Test {
+    public static void main(String[] args) {
+
+        System.out.println();
+        System.out.println("Name : Prathamesh Rajbhoj");
+        System.out.println("Roll : A - 53");
+        System.out.println();
+
+        GreatClock gc1 = new GreatClock(0, 5, 20, 10, 10);
+        GreatClock gc2 = new GreatClock(0, 10, 30, 20, 20);
+        GreatClock gc3 = GreatClock.add_time(gc1,gc2);
+        gc3.display_clock();
+    }
+}
+
+Output :
+
+
+
+
+Question - 3
+
+MyTime.java :
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+class MyTime {
+    int day;
+    int month;
+    int year;
+    int hh;
+    int mm;
+    int sec;
+    String ap;
+
+    MyTime(int d, int m, int y, int h, int min, int s, String a) {
+        day = d;
+        month = m;
+        year = y;
+        hh = h;
+        mm = min;
+        sec = s;
+        ap = a;
+    }
+}
+Test.java :
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class Test {
+
+    static String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
+
+    public static void main(String[] args) {
+        MyTime m1 = new MyTime(4, 6, 2022, 10, 15, 55, "PM");
+
+        String d = Integer.toString(m1.day);
+        String m = Integer.toString(m1.month);
+        String y = Integer.toString(m1.year);
+        String hr = Integer.toString(m1.hh);
+        String min = Integer.toString(m1.mm);
+        String sec = Integer.toString(m1.sec);
+
+        if (m1.day < 10)
+            d = "0" + d;
+        if (m1.month < 10)
+            m = "0" + m;
+        if (m1.hh < 10)
+            hr = "0" + hr;
+        if (m1.mm < 10)
+            min = "0" + min;
+        if (m1.sec < 10)
+            sec = "0" + sec;
+
+        String dateInString = d + "/" + m + "/" + y + " " + hr + ":" + min + ":" + sec;
+
+        System.out.println();
+        System.out.println();
+        
+        System.out.println(dateInString);
+        System.out.println();
+        
+        LocalDateTime ldt = LocalDateTime.parse(dateInString, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        
+        ZoneId indiaZoneId = ZoneId.of("Asia/Kolkata");
+        System.out.println("TimeZone : " + indiaZoneId);
+        
+        ZonedDateTime asiaZonedDateTime = ldt.atZone(indiaZoneId);
+        System.out.println("Date (India) : " + asiaZonedDateTime);
+
+        System.out.println();
+        System.out.println();
+        
+        ZoneId newYokZoneId = ZoneId.of("America/New_York");
+        System.out.println("TimeZone : " + newYokZoneId);
+        
+        ZonedDateTime nyDateTime = asiaZonedDateTime.withZoneSameInstant(newYokZoneId);
+        System.out.println("Date (New York) : " + nyDateTime);
+
+        System.out.println();
+        
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        System.out.println("\n---DateTimeFormatter---");
+        System.out.println();
+        System.out.println("Date (India) : " + format.format(asiaZonedDateTime));
+        System.out.println("Date (New York) : " + format.format(nyDateTime));
+        System.out.println();
+
+    }
+
+}
+Output :
+
+
+
+

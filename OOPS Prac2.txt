@@ -1,0 +1,384 @@
+OOPS LAB - PRACTICAL 2
+Name : Prathamesh Rajbhoj
+Branch : CSE
+Section : 4A
+Roll No : 53
+
+
+Aim 
+
+An Employee Attendance Management
+System (EMS) has to be designed. The system maintains following information
+Employee : id, name, age, designation, salary,
+Attendance [] – array to maintain day-wise attendance of an employee
+Attendance
+date
+time in (in 24 hours format HH MM)
+time out (in 24 hours format HH MM)
+AttendanceGenerator
+Class that implements all the functionalities mentioned below
+WAP to implement following functionalities of EMS
+1.     Display month wise attendance of an employee
+2.     Display the number of working hours of an employee for a given date
+3.     Count Number of working days for an employee
+Assumptions:
+1.     Each month is of 10 days (for simplicity of input)
+2.     You may define any other classes, if required
+3.     Use a suitable datatype for date and time as per your choice
+Review Questions:
+1. 	Object array passed as an argument to a method is pass by value or pass by reference? Justify your answer.
+2.  	How do we declare a 2D object Array? Explain with an example.
+
+
+
+
+
+
+
+
+
+AutoTimeGenerator.java
+
+
+
+public class AutoTimeGenerator {
+
+    // generates random time between 1-11 hr
+
+    static int generate_entry_hour() {
+        int ans = (int) (1 + (Math.random() * 15));
+        return ans;
+    }
+
+
+    // generates random time between 1-59 min
+
+    static int generate_entry_min() {
+        int ans = (int) (1 + (Math.random() *  58));
+        return ans;
+    }
+
+
+    // generates random time between 10-24 hr
+
+    static int generate_exit_hour() {
+        int ans = (int) (10 + (Math.random() * 14));
+        return ans;
+    }
+
+
+    // generates random time between 1-59 min
+
+    static int generate_exit_min() {
+        int ans = (int) (1 + (Math.random() *  58));
+        return ans;
+    }
+    
+}
+
+
+
+
+
+
+EMPLOYEE.JAVA
+
+public class Employee {
+
+    int id;
+    String name;
+    int age;
+    String designation;
+    double salary;
+    Attendance attd[][];
+
+    Employee() {
+    }
+
+    Employee(int id, String name, int age, String designation, double salary, Attendance attd[][]) {
+
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.designation = designation;
+        this.salary = salary;
+        this.attd = attd;
+
+    }
+
+    void display() {
+        System.out.println();
+        System.out.println("ID : " + this.id);
+        System.out.println("Name : " + this.name);
+        System.out.println("Age : " + this.age);
+        System.out.println("Designation : " + this.designation);
+        System.out.println("Salary : " + this.salary);
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 10; j++) {
+                attd[i][j].display_attendance();
+            }
+        }
+        System.out.println();
+    }
+
+    void month_wise_display(int month_no) {
+
+        if (month_no > 12 || month_no < 1) {
+            System.out.println("\n\nInvalid Month\n\n");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("ID : " + this.id);
+        System.out.println("Name : " + this.name);
+        System.out.println("Age : " + this.age);
+        System.out.println("Designation : " + this.designation);
+        System.out.println("Salary : " + this.salary);
+        System.out.println();
+        for (int i = 0; i < 30; i++) {
+            attd[month_no - 1][i].display_attendance();
+        }
+        System.out.println();
+    }
+
+    int count_time(int date, int month) {
+
+        int d = attd[month - 1][date - 1].duration;
+        return d;
+
+    }
+
+    int count_working_days() {
+        int ans = 0;
+
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 30; j++) {
+                int d = attd[i ][j].duration;
+
+                if (d != 0) {
+                    ans++;
+                }
+            }
+        }
+
+        return ans;
+
+    }
+
+}
+
+
+
+
+
+Attendance.JAVA
+
+public class Attendance {
+
+    String date;
+    String time_in;
+    String time_out;
+    int duration;
+
+    // Time Format : 09:25
+    // Time Format : 18:07
+
+    Attendance() {
+    }
+
+    int find_duration(String time_in, String time_out) {
+
+        int ans = 0;
+
+        if (time_in == time_out) {
+            return 0;
+        }
+
+        if (time_in == "" || time_out == "") {
+            return 0;
+        }
+
+        int hr1 = (time_in.charAt(0)) * 10 + (time_in.charAt(1));
+        int min1 = (time_in.charAt(3)) * 10 + (time_in.charAt(4));
+
+        int hr2 = (time_out.charAt(0)) * 10 + (time_out.charAt(1));
+        int min2 = (time_out.charAt(3)) * 10 + (time_out.charAt(4));
+
+        if (hr1 > hr2) {
+            return 0;
+        } 
+        if (hr1 == hr2 && min1 > min2) {
+            return 0;
+        } 
+        
+        if (min1 < min2) {
+            ans += (hr2 - hr1) * 60 + (min2 - min1);
+        } else {
+            ans += (hr2 - hr1 - 1) * 60 + (60 - (min1 - min2));
+        }
+
+        // System.out.println(ans);
+
+        return ans;
+
+    }
+
+    Attendance(String date, String time_in, String time_out) {
+        this.date = date;
+        this.time_in = time_in;
+        this.time_out = time_out;
+        this.duration = find_duration(this.time_in, this.time_out);
+    }
+
+    void display_attendance() {
+        // System.out.println("Date : " + this.date);
+        // System.out.println("Entry : " + this.time_in);
+        // System.out.println("Exit : " + this.time_out);
+        // System.out.println("Duration : " + this.duration);
+        // System.out.println("duration : "+this.duration);
+        System.out.println(this.date + " - " + (this.duration / 60) + " hr " + (this.duration % 60) + " mins");
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AttendanceGenerator.JAVA
+
+import java.util.Scanner;
+
+public class AttendanceGenerator {
+    public static void main(String[] args) {
+
+        // Assuming 30 days in a month for ease instead of 29,30,31
+        // 12 months in a year
+
+        Attendance a[][] = new Attendance[12][30];
+
+        Employee emp1 = new Employee(1, "Prathamesh Rajbhoj", 19, "CEO", 9999999, a);
+
+        System.out.println();
+        System.out.println();
+        System.out.println("Auto Generating Entrance and Exit Time Via Rand Function");
+        System.out.println();
+        System.out.println();
+
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 30; j++) {
+                String date = Integer.toString(j + 1) + "/" + Integer.toString(i + 1);
+
+                int entry_hr = AutoTimeGenerator.generate_entry_hour();
+                int entry_min = AutoTimeGenerator.generate_entry_min();
+                int exit_hr = AutoTimeGenerator.generate_exit_hour();
+                int exit_min = AutoTimeGenerator.generate_exit_min();
+
+                // converting entry time into HH:MM Format
+                String entry = "";
+
+                if (entry_hr < 10) {
+                    entry += "0";
+                }
+
+                entry += Integer.toString(entry_hr);
+
+                entry += ":";
+
+                if (entry_min < 10) {
+                    entry += "0";
+                }
+                entry += Integer.toString(entry_min);
+
+                // converting exit time into HH:MM Format
+
+                String exit = "";
+
+                if (exit_hr < 10) {
+                    exit += "0";
+                }
+
+                exit += Integer.toString(exit_hr);
+
+                exit += ":";
+
+                if (exit_min < 10) {
+                    exit += "0";
+                }
+
+                exit += Integer.toString(exit_min);
+
+                
+                a[i][j] = new Attendance(date, entry, exit);
+
+
+                // printing auto generated d time
+    
+                System.out.println("Date : " + (j + 1) + "/" + (i + 1));
+                System.out.println("Entry Time : " + entry);
+                System.out.println("Exit Time : " + exit);
+                System.out.println("Duration : " + (a[i][j].duration / 60) + " hr " + (a[i][j].duration % 60) + " mins");
+                System.out.println();
+            }
+        }
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println();
+        System.out.println();
+        System.out.print("Enter Month For which you want to see Attendance : ");
+        int month_number = sc.nextInt();
+        System.out.println();
+        System.out.println();
+
+        emp1.month_wise_display(month_number);
+
+        System.out.println();
+        System.out.println();
+        System.out.print("Enter Day For which you want to see Attendance : ");
+        String s = sc.next();
+        System.out.println();
+
+        int date = (s.charAt(0) - '0') * 10 + (s.charAt(1) - '0');
+        int month = (s.charAt(3) - '0') * 10 + (s.charAt(4) - '0');
+
+        int dur = emp1.count_time(date, month);
+        System.out.println("Working Hour for " + (date) + "/" + (month) + " : " + (dur / 60) + " hr " + (dur % 60) + " mins");
+
+        System.out.println();
+        System.out.println();
+
+        System.out.println("Calculating Total Working Days for EMP1 in a year");
+
+        System.out.println();
+
+        int work_day = emp1.count_working_days();
+        System.out.println("Total Working Days : " + work_day + "/360\n");
+
+        sc.close();
+
+    }
+
+}
+
+
+
+
+
+
+OUTPUTS
+
+
+
